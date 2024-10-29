@@ -1,48 +1,54 @@
-/**
-ESP: Eliminar correos Electrónicos de dominios específicos que tengan 15 días o más de antigüedad.
-ENG: Deletes email from specific domains if they're 15 or older.
- */
-
 function BorraElViejoEmilio() {
-  // Lista de dominios a los que se aplicará la eliminación ----  List of Domains to be checked.
-  const domains = ['immail.fanatical.com', 'twitch.tv', 'quora.com','linkedin.com', 'ziprecruiter.co.uk'];
+  // Divide los dominios en categorías (esto no es necesario, es para ordenarlos fácilmente cuando las listas crezcan)
+  const job = ['linkedin.com', 'ziprecruiter.co.uk'];
+  const spam = ['hyperxnews.eu', 'notice.aliexpress.com'];
+  const social = ['twitch.tv', 'quora.com'];
+  const games = ['immail.fanatical.com', 'mailer.humblebundle.com'];
 
-  // Calcula la fecha límite (hace 15 días)   ----- Calculates the 15 days Ago date
+  // Combina las categorías en una sola lista de dominios
+  const domains = job.concat(spam, games, social);
 
+  // Calcula la fecha límite (hace 15 días)
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - 15);
 
   // Formatear la fecha límite como YYYY/MM/DD
   const formattedDate = formatDate(cutoffDate);
 
-  // Eliminar correos electrónicos anteriores a 15 días de cada dominio --- Deletes Emails Older than 15 Days 
+  // Contador para el número de correos eliminados
+  let deletedCount = 0;
+
+  // Eliminar correos electrónicos anteriores a 15 días de cada dominio y sólo no leídos
   domains.forEach(domain => {
-    const query = `before:${formattedDate} from:*@${domain}`;
-    BorraEmiliosporQuery(query);
+    const query = `before:${formattedDate} from:*@${domain} is:unread`; // Sólo correos no leídos
+    deletedCount += BorraEmiliosporQuery(query);
   });
+
+  // Mostrar en consola el número total de correos eliminados
+  console.log(`Total de correos eliminados: ${deletedCount}`);
 }
 
 /**
- * Formatea una fecha como YYYY/MM/DD.   ------------- Formats the Date in the YYYY/MM/DD Format
- * @param {Date} date - La fecha a formatear.   ------ The Date
- * @returns {string} - La cadena de fecha formateada. --- The Formatted date
+ * Formatea una fecha como YYYY/MM/DD.
+ * @param {Date} date - La fecha a formatear.
+ * @returns {string} - La cadena de fecha formateada.
  */
-
 function formatDate(date) {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Asegura mes de dos dígitos (01 en vez de 1) --- Makes Sure the Months Have at least 2 digits (01 instead of 1)
-  const day = String(date.getDate()).padStart(2, '0'); // Asegura día de dos dígitos  ---- Same with the Day
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Asegura mes de dos dígitos
+  const day = String(date.getDate()).padStart(2, '0'); // Asegura día de dos dígitos
   return `${year}/${month}/${day}`;
 }
 
 /**
- * Elimina correos electrónicos basados en la consulta (Query). --- Deletes Emails Based on the Query
+ * Elimina correos electrónicos basados en la consulta (Query).
  * @param {string} query - La consulta de búsqueda para encontrar correos electrónicos.
+ * @returns {number} - La cantidad de correos eliminados.
  */
-
 function BorraEmiliosporQuery(query) {
   const threads = GmailApp.search(query);
   threads.forEach(thread => {
-    thread.moveToTrash(); // Mover correos electrónicos a la papelera  --- moves the emails to the rubbish bin
+    thread.moveToTrash(); // Mover correos electrónicos a la papelera
   });
+  return threads.length; // Retorna el número de correos eliminados
 }
