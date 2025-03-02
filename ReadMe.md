@@ -9,8 +9,8 @@ Esto es un Action Script para borrar los correos tengan más de 15 días de anti
 To activate.
 Para Activarlo.
 
-Log into https://drive.google.com/ and create a new Google Script by clicking on "+ New" and then selecting "Google Scripts"
-Loggea en https://drive.google.com y crea un nuevo Google Script haciendo click en "+Nuevo" y seleccionando "Scripts de Google"
+Log into https://script.google.com/ and create a new Google Script
+Entra en en https://script.google.com/ y crea un nuevo Google Script
 
 Name it.... 
 Ponle un nombre... 
