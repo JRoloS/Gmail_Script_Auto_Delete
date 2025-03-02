@@ -1,31 +1,48 @@
 function BorraElViejoEmilio() {
   // Divide los dominios en categorías (esto no es necesario, es para ordenarlos fácilmente cuando las listas crezcan)
-  const job = ['linkedin.com', 'ziprecruiter.co.uk'];
-  const spam = ['hyperxnews.eu', 'notice.aliexpress.com'];
-  const social = ['twitch.tv', 'quora.com'];
+  // Divide the domains into categories (this is not necessary; it's just to organize them easily as the lists grow)
+
   const games = ['immail.fanatical.com', 'mailer.humblebundle.com'];
+  const finance = ['emails.paypal.com'];
+  const jobs = ['linkedin.com', 'ziprecruiter.co.uk'];
+  const spam = ['hyperxnews.eu', 'notice.aliexpress.com', 'updates.papajohns.co.uk'];
+  const social = ['quora.com', 'twitch.tv', 'notification@facebookmail.com', 'redditmail.com'];
 
   // Combina las categorías en una sola lista de dominios
-  const domains = job.concat(spam, games, social);
+  // Combine the categories into a single list of domains
+
+  const domains = jobs.concat(spam, games, social, finance);
 
   // Calcula la fecha límite (hace 15 días)
+  // Calculate the cutoff date (15 days ago)
+  
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - 15);
 
   // Formatear la fecha límite como YYYY/MM/DD
+  // Format the cutoff date as YYYY/MM/DD 
+
   const formattedDate = formatDate(cutoffDate);
 
   // Contador para el número de correos eliminados
+  // A counter for the number of deleted emails
+
   let deletedCount = 0;
 
   // Eliminar correos electrónicos anteriores a 15 días de cada dominio y sólo no leídos
+  // Delete emails older than 15 days from each domain and only unread ones
+
   domains.forEach(domain => {
-    const query = `before:${formattedDate} from:*@${domain} is:unread`; // Sólo correos no leídos
+    const query = `before:${formattedDate} from:*@${domain} is:unread`; // Sólo correos no leídos , Only unread ones
     deletedCount += BorraEmiliosporQuery(query);
   });
 
-  // Mostrar en consola el número total de correos eliminados
-  console.log(`Total de correos eliminados: ${deletedCount}`);
+  // Mostrar en consola el número total de correos eliminados (si hay alguno)
+  // Show on console the total number of deleted emails (if any)
+
+  if (deletedCount > 0) {
+    console.log(`Total de correos eliminados: ${deletedCount}`);
+  }
 }
 
 /**
@@ -33,10 +50,18 @@ function BorraElViejoEmilio() {
  * @param {Date} date - La fecha a formatear.
  * @returns {string} - La cadena de fecha formateada.
  */
+
+/**
+ * Formats a date as YYYY/MM/DD.
+ * @param {Date} date - The date to format.
+ * @returns {string} - The formatted date string.
+ */
+
 function formatDate(date) {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Asegura mes de dos dígitos
-  const day = String(date.getDate()).padStart(2, '0'); // Asegura día de dos dígitos
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Asegura mes de dos dígitos, Ensures the month is two digits long
+
+  const day = String(date.getDate()).padStart(2, '0'); // Asegura día de dos dígitos, Ensures day is two digits long
   return `${year}/${month}/${day}`;
 }
 
@@ -45,10 +70,32 @@ function formatDate(date) {
  * @param {string} query - La consulta de búsqueda para encontrar correos electrónicos.
  * @returns {number} - La cantidad de correos eliminados.
  */
+
+/**
+ * Deletes emails based on the query.
+ * @param {string} query - The search query to find emails.
+ * @returns {number} - The number of emails deleted.
+ */
+
 function BorraEmiliosporQuery(query) {
   const threads = GmailApp.search(query);
+  
+  // Si no hay correos para eliminar, retorna 0 y evita errores
+  // If there are no emails to delete, return 0 and prevent errors
+  
+  if (threads.length === 0) {
+    return 0;
+  }
+
+  // Mover correos electrónicos a la papelera (borrar)
+  // Move emails to trash bin (delete)
+
   threads.forEach(thread => {
-    thread.moveToTrash(); // Mover correos electrónicos a la papelera
+    thread.moveToTrash();
   });
-  return threads.length; // Retorna el número de correos eliminados
+
+  // Retorna el número de correos eliminados
+  // Returns the number of deleted emails
+  
+  return threads.length;
 }
