@@ -3,16 +3,17 @@ function BorraElViejoEmilio() {
     // Divide los dominios en categorías (esto no es necesario, es para ordenarlos fácilmente cuando las listas crezcan)
     // Divide the domains into categories (this is not necessary; it's just to organize them easily as the lists grow)
     
-    const games = ['immail.fanatical.com', 'mailer.humblebundle.com'];
-    const finance = ['emails.paypal.com'];
-    const jobs = ['linkedin.com', 'ziprecruiter.co.uk'];
-    const spam = ['hyperxnews.eu', 'notice.aliexpress.com', 'updates.papajohns.co.uk'];
-    const social = ['quora.com', 'twitch.tv', 'notification@facebookmail.com', 'redditmail.com'];
+    const games = ['immail.fanatical.com', 'mailer.humblebundle.com','store.greenmangaming.com','lurkit.com'];
+    const finance = ['emails.paypal.com','insights.natwest.com','revolut.com'];
+    const jobs = ['linkedin.com', 'ziprecruiter.co.uk','notify.infojobs.net'];
+    const spam = ['notice.aliexpress.com', 'updates.papajohns.co.uk','slatergordon.co.uk','mosalingua.com'];
+    const social = ['quora.com', 'twitch.tv', 'facebookmail.com', 'redditmail.com','discover.pinterest.com'];
+    const stores = ['jsaux.com','hyperxnews.eu','melgeek.com','mailers.europe.creative.com'];
 
     // Combina las categorías en una sola lista de dominios
     // Combine the categories into a single list of domains
     
-    const domains = jobs.concat(spam, games, social, finance);
+    const domains = jobs.concat(spam, games, social, finance, stores);
 
     // Calcula la fecha límite (hace 15 días)
     // Calculate the cutoff date (15 days ago)
